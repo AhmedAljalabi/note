@@ -37,10 +37,10 @@ class _HomeScreenState extends State<HomeScreen>
  Row(
   children: [
     CircleAvatar(
-      backgroundImage: AssetImage('assets/A_6.jpg'),
+      backgroundImage: AssetImage('assets/a6.jpg'),
       
     ),
-    const SizedBox(width: 8),
+    const SizedBox(width: 15),
     Text(
       "Welcome! Ahmed Aljalabi to the Note App",
       style: TextStyle(
