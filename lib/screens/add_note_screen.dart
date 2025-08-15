@@ -93,7 +93,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
       tag: _selectedTagId!,
     );
 
-    // Calling the provider to add or update the expense
+    // Calling the provider to add or update the note
     Provider.of<NoteProvider>(context, listen: false).addOrUpdateNote(notes);
     Navigator.pop(context);
   }

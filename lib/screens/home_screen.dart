@@ -172,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen>
           );
         }
 
-        // Grouping expenses by category
+        // Grouping note by category
         var grouped = groupBy(provider.notes, (Note e) => e.categoryId);
         return ListView(
           children: grouped.entries.map((entry) {

@@ -64,7 +64,7 @@ class NoteProvider with ChangeNotifier {
     }
   }
 
-  // Add an expense
+  // Add a note
   void addNote(Note notes) {
     _notes.add(notes);
     _saveNotesToStorage();
@@ -89,7 +89,7 @@ class NoteProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Delete an expense
+  // Delete a note
   void deleteNotes(String id) {
     _notes.removeWhere((notes) => notes.id == id);
     _saveNotesToStorage(); // Save the updated list to local storage
