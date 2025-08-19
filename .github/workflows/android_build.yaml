@@ -8,9 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x.x' # Use your Flutter version
+          channel: 'stable' # <--- Add this line to specify the channel
+          flutter-version: '3.19.0' # <--- Change this to a specific version, or '3.x'
       - run: flutter pub get
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
