@@ -1,0 +1,55 @@
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/note_provider.dart';
+import '../widgets/add_category_dialog.dart';
+
+// Example for CategoryManagementScreen
+class CategoryManagementScreen extends StatelessWidget {
+  const CategoryManagementScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Manage Categories"),
+        backgroundColor: Colors.yellow, // Themed color similar to your inspirations
+        foregroundColor: Colors.white,
+      ),
+      body: Consumer<NoteProvider>(
+        builder: (context, provider, child) {
+          return ListView.builder(
+            itemCount: provider.categories.length,
+            itemBuilder: (context, index) {
+              final category = provider.categories[index];
+              return ListTile(
+                title: Text(category.name),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () {
+                    provider.deleteCategory(category.id);
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AddCategoryDialog(
+              onAdd: (newCategory) {
+                Provider.of<NoteProvider>(context, listen: false).addCategory(newCategory);
+                Navigator.pop(context); // Close the dialog
+              },
+            ),
+          );
+        },
+        tooltip: 'Add New Category',
+        child: const Icon(Icons.add, color: Colors.green),
+      ),
+    );
+  }
+}
