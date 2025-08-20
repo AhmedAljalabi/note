@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import '../models/note.dart';
 import '../models/note_category.dart';
 import '../models/tag.dart';
 import 'package:localstorage/localstorage.dart';
 import 'dart:convert';
 
-
 class NoteProvider with ChangeNotifier {
   final LocalStorage storage;
-  // List of notes
-// Removed duplicate unnamed constructor
 
   List<Note> _notes = [];
 
-  // List of categories
   final List<NoteCategory> _categories = [
     NoteCategory(id: '1', name: 'Food', isDefault: true),
     NoteCategory(id: '2', name: 'Transport', isDefault: true),
@@ -23,7 +18,6 @@ class NoteProvider with ChangeNotifier {
     NoteCategory(id: '5', name: 'Gym', isDefault: true),
   ];
 
-  // List of tags
   final List<Tag> _tags = [
     Tag(id: '1', name: 'Breakfast'),
     Tag(id: '2', name: 'Lunch'),
@@ -42,61 +36,55 @@ class NoteProvider with ChangeNotifier {
     Tag(id: '15', name: 'Streaming'),
   ];
 
-  // Getters
   List<Note> get notes => _notes;
   List<NoteCategory> get categories => _categories;
   List<Tag> get tags => _tags;
 
-  NoteProvider(this.storage) {
-    _loadNotesFromStorage();
+  NoteProvider(this.storage);
+
+  Future<void> init() async {
+    await _loadNotesFromStorage();
   }
 
-  void _loadNotesFromStorage() async {
-    // Wait for the storage to be ready
-     Future.delayed;
-    // Load notes from local storage
+  Future<void> _loadNotesFromStorage() async {
     var storedNotes = storage.getItem('notes');
     if (storedNotes != null) {
-      _notes = List<Note>.from(
-        (storedNotes as List).map((item) => Note.fromJson(item)),
-      );
+      List<dynamic> decoded = jsonDecode(storedNotes);
+      _notes = decoded.map((item) => Note.fromJson(item)).toList();
       notifyListeners();
     }
   }
 
-  // Add a note
-  void addNote(Note notes) {
-    _notes.add(notes);
+  void _saveNotesToStorage() {
+    storage.setItem(
+      'notes',
+      jsonEncode(_notes.map((e) => e.toJson()).toList()),
+    );
+  }
+
+  void addNote(Note note) {
+    _notes.add(note);
     _saveNotesToStorage();
     notifyListeners();
   }
 
-  void _saveNotesToStorage() {
-    storage.setItem(
-        'notes', jsonEncode(_notes.map((e) => e.toJson()).toList()));
-  }
-
-  void addOrUpdateNote(Note notes) {
-    int index = _notes.indexWhere((e) => e.id == notes.id);
+  void addOrUpdateNote(Note note) {
+    int index = _notes.indexWhere((e) => e.id == note.id);
     if (index != -1) {
-      // Update existing note
-      _notes[index] = notes;
+      _notes[index] = note;
     } else {
-      // Add new note
-      _notes.add(notes);
+      _notes.add(note);
     }
-    _saveNotesToStorage(); // Save the updated list to local storage
+    _saveNotesToStorage();
     notifyListeners();
   }
 
-  // Delete a note
   void deleteNotes(String id) {
-    _notes.removeWhere((notes) => notes.id == id);
-    _saveNotesToStorage(); // Save the updated list to local storage
+    _notes.removeWhere((note) => note.id == id);
+    _saveNotesToStorage();
     notifyListeners();
   }
 
-  // Add a category
   void addCategory(NoteCategory category) {
     if (!_categories.any((cat) => cat.name == category.name)) {
       _categories.add(category);
@@ -104,13 +92,11 @@ class NoteProvider with ChangeNotifier {
     }
   }
 
-  // Delete a category
   void deleteCategory(String id) {
     _categories.removeWhere((category) => category.id == id);
     notifyListeners();
   }
 
-  // Add a tag
   void addTag(Tag tag) {
     if (!_tags.any((t) => t.name == tag.name)) {
       _tags.add(tag);
@@ -118,15 +104,14 @@ class NoteProvider with ChangeNotifier {
     }
   }
 
-  // Delete a tag
   void deleteTag(String id) {
     _tags.removeWhere((tag) => tag.id == id);
     notifyListeners();
   }
 
   void removeNotes(String id) {
-    _notes.removeWhere((notes) => notes.id == id);
-    _saveNotesToStorage(); // Save the updated list to local storage
+    _notes.removeWhere((note) => note.id == id);
+    _saveNotesToStorage();
     notifyListeners();
   }
 }

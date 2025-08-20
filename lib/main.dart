@@ -6,10 +6,9 @@ import 'screens/category_management_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/tag_management_screen.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initLocalStorage();
-
+  final localStorage = LocalStorage('note_app');
   runApp(MyApp(localStorage: localStorage));
 }
 
@@ -25,18 +24,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NoteProvider(localStorage)),
       ],
       child: MaterialApp(
-        
         title: 'Note',
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         routes: {
-          '/': (context) => HomeScreen(), // Main entry point, HomeScreen
-          '/manage_categories': (context) =>
-              CategoryManagementScreen(), // Route for managing categories
-          '/manage_tags': (context) =>
-              TagManagementScreen(), // Route for managing tags
+          '/': (context) => HomeScreen(),
+          '/manage_categories': (context) => CategoryManagementScreen(),
+          '/manage_tags': (context) => TagManagementScreen(),
         },
-        // Removed 'home:' since 'initialRoute' is used to define the home route
       ),
     );
   }
