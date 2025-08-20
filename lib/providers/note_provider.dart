@@ -40,7 +40,7 @@ class NoteProvider with ChangeNotifier {
   List<NoteCategory> get categories => _categories;
   List<Tag> get tags => _tags;
 
-  NoteProvider(this.storage);
+  NoteProvider(this.storage){ _loadNotesFromStorage();}
 
   Future<void> init() async {
     await _loadNotesFromStorage();
